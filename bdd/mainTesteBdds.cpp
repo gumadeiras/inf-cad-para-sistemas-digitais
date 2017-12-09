@@ -7,7 +7,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    gerentebdd g;    
+    gerentebdd g;
     set<string> conjunto_variaveis;
     nodobdd *nd1=g.create_from_equation("c*(a+b)", conjunto_variaveis);
     nodobdd *nd2=g.create_from_equation("c+(!(!a*!b))", conjunto_variaveis);
