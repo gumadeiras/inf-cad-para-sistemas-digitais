@@ -82,7 +82,8 @@ for i, line in enumerate(file):
         # handle outputs
         index_node      = int(token[0])
         isInput_aux     = aig[index_node].isInput
-        node            = AIGnode(isInput_aux, True, "", -1, -1)
+        isExpr_aux      = aig[index_node].expr
+        node            = AIGnode(isInput_aux, True, isExpr_aux, -1, -1)
         aig[index_node] = node
 
         output_indexes.append(index_node)
@@ -117,10 +118,10 @@ for i, line in enumerate(file):
 
 # print(keys)
 # print(aig)
-# print "#:~:#| PRINT AIG |#:~:##:~:##:~:##:~:##:~:##:~:#\n"
-# for key, value in aig.items():
-#     print str(key) +": \n" + str(aig[key])
-# print "\n#:~:#| END AIG |#:~:##:~:##:~:##:~:##:~:##:~:#\n"
+print "#:~:#| PRINT AIG |#:~:##:~:##:~:##:~:##:~:##:~:#\n"
+for key, value in aig.items():
+    print str(key) +": \n" + str(aig[key])
+print "\n#:~:#| END AIG |#:~:##:~:##:~:##:~:##:~:##:~:#\n"
 
 
 # sys.stdout.flush()
