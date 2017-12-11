@@ -38,8 +38,9 @@ for line in file:
         gates       = int(token[5])
 
         # each variable can be either (+|-)
-        keys = range(1,2*variables+inputs+outputs)
+        keys = range(2,2*(variables)+2) #starting at index 2 (thus, adding two more indexes in the range upper bound)
         table = dict.fromkeys(keys)
+    
         # for key in table:
         # for c in ascii_lowercase:
         # iterar no dict e atribuir uma letra pra cada variavel
