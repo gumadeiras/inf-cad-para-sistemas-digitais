@@ -27,24 +27,30 @@ gates          = 0
 aig            = {}
 output_indexes = []
 
+def is_odd(value):
+	return ( (value & 1) == 1)
+
+def is_even(value):
+	return ( (value & 1) == 0)
+
 def get_node_expression(node):
     #print node
     if (node.isInput): #if is input
         return node.expr
     is_odd_in1 = node.in1 & 1
     is_odd_in2 = node.in2 & 1
-    print("valor " + str(node.in1) + " eh impar " + str(is_odd_in1))
-    print("valor " + str(node.in2) + " eh impar " + str(is_odd_in2))
-    if (is_odd_in1 and is_odd_in2):
+#    print("valor " + str(node.in1) + " eh impar " + str(is_odd_in1))
+#    print("valor " + str(node.in2) + " eh impar " + str(is_odd_in2))
+    if (is_odd(node.in1) and is_odd(node.in2)):
         return "!(" + get_node_expression(aig[node.in1-1]) + ")" + "*" + "!(" + get_node_expression(aig[node.in2-1]) + ")"
 
-    elif (is_odd_in1 and not is_odd_in2):
+    elif (is_odd(node.in1) and is_even(node.in2)):
         return "!(" + get_node_expression(aig[node.in1-1]) + ")" + "*" + get_node_expression(aig[node.in2])
 
-    elif (not is_odd_in1 and is_odd_in2):
+    elif (is_even(node.in1) and is_odd(node.in2)):
         return get_node_expression(aig[node.in1]) + "*" + "!(" + get_node_expression(aig[node.in2-1]) + ")"
 
-    elif (not is_odd_in1 and not is_odd_in2):
+    elif (is_even(node.in1) and is_even(node.in2)):
         return get_node_expression(aig[node.in1]) + "*" + get_node_expression(aig[node.in2])
 
 # PROGRAM BEGINS HERE
@@ -81,9 +87,13 @@ for i, line in enumerate(file):
     elif (i in range(1+inputs,1+inputs+outputs)):
         # handle outputs
         index_node      = int(token[0])
-        isInput_aux     = aig[index_node].isInput
-        isExpr_aux      = aig[index_node].expr
-        node            = AIGnode(isInput_aux, True, isExpr_aux, -1, -1)
+        if is_even(index_node):
+        	isInput_aux     = aig[index_node].isInput
+        	expr_aux      	= aig[index_node].expr
+        else:
+        	isInput_aux     = aig[index_node-1].isInput #inputs sempre sao referenciadas pelos numeros pares
+        	expr_aux      	= aig[index_node-1].expr
+        node            = AIGnode(isInput_aux, True, expr_aux, -1, -1)
         aig[index_node] = node
 
         output_indexes.append(index_node)
@@ -131,5 +141,8 @@ for output_index in output_indexes:
     print "expression for node " + str(output_index)
     # print output_index
     # print aig[output_index]
-    print get_node_expression(aig[output_index])
 
+    if is_even(output_index):
+    	print get_node_expression(aig[output_index])
+    else:
+    	print "!(" + get_node_expression(aig[output_index-1]) + ")"
